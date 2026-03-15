@@ -7,7 +7,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 
 /* Header */
 .header{background:var(--card);border-bottom:1px solid var(--b);position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
-.header-inner{max-width:1300px;margin:0 auto;padding:0 24px;height:66px;display:flex;align-items:center;justify-content:flex-start}
+.header-inner{display:flex;align-items:center;gap:30px}
 .logo{display:flex;align-items:center;gap:12px}
 .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--c),var(--c2));border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:18px}
 .logo-text{font-size:21px;font-weight:700}
@@ -17,7 +17,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 
 /* 大分类下拉 */
 .nav-group{position:relative}
-.group-menu{position:absolute;top:100%;left:-20px;background:var(--card);border:1px solid var(--b);border-radius:var(--r);box-shadow:var(--sh);padding:16px;display:none;grid-template-columns:repeat(5,1fr);gap:20px;min-width:700px;z-index:200}
+.group-menu{position:absolute;top:100%;left:-20px;background:var(--card);border:1px solid var(--b);border-radius:var(--r);box-shadow:var(--sh);padding:16px;display:none;grid-template-columns:repeat(5,1fr);gap:20px;min-width:700px;z-index:9999}
 .nav-group:hover .group-menu{display:grid}
 .group-col h4{font-size:13px;color:var(--text2);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--b)}
 .group-col a{display:block;font-size:13px;color:var(--text);padding:6px 0}
@@ -174,3 +174,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .tech-tag:hover .tag-name{color:#FFF}
 .tag-num{font-size:12px;padding:2px 8px;background:rgba(0,82,255,0.15);border-radius:12px;color:var(--c);font-weight:600}
 .tech-tag:hover .tag-num{background:rgba(255,255,255,0.2);color:#FFF}
+
+/* 修复侧边栏 */
+.page-layout{display:flex;max-width:1300px;margin:0 auto;padding:30px 24px;gap:30px;align-items:flex-start}
+.sidebar{width:240px;flex-shrink:0;position:sticky;top:90px;max-height:calc(100vh - 120px);overflow-y:auto}
+.main-content{flex:1;min-width:0;overflow:visible}
