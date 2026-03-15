@@ -325,11 +325,9 @@ body {
   border-color: var(--accent-primary);
 }
 
-.article-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-}
+.article-link { text-decoration: none; color: inherit; display: block; }
+
+.article-link:hover { text-decoration: none; }
 
 .article-image {
   height: 180px;
