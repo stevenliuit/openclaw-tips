@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="<%- url_for('/favicon.ico') %>">
+  <link rel="icon" href="<%- url_for('/favicon.ico') %>">
   <title><%= config.title %></title>
   <meta name="description" content="<%= config.description %>">
   <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,20 +18,47 @@
         <span class="logo-text"><%= config.title %></span>
       </a>
       <nav class="nav">
-        <a href="<%- url_for('/') %>" class="nav-link">🏠 首页</a>
-        <div class="nav-dropdown">
-          <span class="nav-link">📁 分类 ▾</span>
-          <div class="dropdown-menu">
-            <a href="<%- url_for('/categories/教程') %>">📚 教程</a>
-            <a href="<%- url_for('/categories/技能') %>">✨ 技能</a>
-            <a href="<%- url_for('/categories/安全') %>">🔒 安全</a>
-            <a href="<%- url_for('/categories/对比') %>">⚖️ 对比</a>
-            <a href="<%- url_for('/categories/自动化') %>">🤖 自动化</a>
-            <a href="<%- url_for('/categories/趋势') %>">🔥 趋势</a>
+        <a href="<%- url_for('/') %>" class="nav-link">首页</a>
+        
+        <!-- 大分类下拉菜单 -->
+        <div class="nav-group">
+          <span class="nav-link">文章分类 ▾</span>
+          <div class="group-menu">
+            <div class="group-col">
+              <h4>📚 基础教程</h4>
+              <a href="/categories/安装配置/">安装配置</a>
+              <a href="/categories/入门指南/">入门指南</a>
+              <a href="/categories/基础操作/">基础操作</a>
+            </div>
+            <div class="group-col">
+              <h4>✨ 技能开发</h4>
+              <a href="/categories/Skills开发/">Skills开发</a>
+              <a href="/categories/技能集成/">技能集成</a>
+              <a href="/categories/自定义工具/">自定义工具</a>
+            </div>
+            <div class="group-col">
+              <h4>🔒 安全运维</h4>
+              <a href="/categories/安全配置/">安全配置</a>
+              <a href="/categories/运维监控/">运维监控</a>
+              <a href="/categories/故障排除/">故障排除</a>
+            </div>
+            <div class="group-col">
+              <h4>🔥 进阶主题</h4>
+              <a href="/categories/自动化/">自动化</a>
+              <a href="/categories/多代理/">多代理系统</a>
+              <a href="/categories/AI集成/">AI集成</a>
+            </div>
+            <div class="group-col">
+              <h4>⚖️ 对比评测</h4>
+              <a href="/categories/对比/">工具对比</a>
+              <a href="/categories/评测/">产品评测</a>
+              <a href="/categories/趋势/">行业趋势</a>
+            </div>
           </div>
         </div>
-        <a href="<%- url_for('/tags') %>" class="nav-link">🏷️ 标签</a>
-        <a href="<%- url_for('/archives') %>" class="nav-link">📅 归档</a>
+        
+        <a href="<%- url_for('/tags') %>" class="nav-link">标签云</a>
+        <a href="<%- url_for('/archives') %>" class="nav-link">文章归档</a>
       </nav>
     </div>
   </header>
@@ -43,41 +70,51 @@
       <h1 class="hero-title"><span><%= config.title %></span></h1>
       <p class="hero-subtitle"><%= config.subtitle %></p>
       <div class="search-box">
-        <input type="text" class="search-input" placeholder="🔍 搜索文章...">
+        <input type="text" class="search-input" placeholder="🔍 搜索文章、教程、技巧...">
       </div>
       <div class="stats">
-        <div class="stat-card"><div class="stat-icon">📄</div><div class="stat-number">945+</div><div class="stat-label">精选文章</div></div>
-        <div class="stat-card"><div class="stat-icon">📁</div><div class="stat-number">12</div><div class="stat-label">文章分类</div></div>
-        <div class="stat-card"><div class="stat-icon">🔄</div><div class="stat-number">∞</div><div class="stat-label">每日更新</div></div>
+        <div class="stat-card"><span class="stat-icon">📄</span><span class="stat-num">945+</span><span class="stat-label">精选文章</span></div>
+        <div class="stat-card"><span class="stat-icon">📁</span><span class="stat-num">15</span><span class="stat-label">文章分类</span></div>
+        <div class="stat-card"><span class="stat-icon">🏷️</span><span class="stat-num">50+</span><span class="stat-label">标签</span></div>
       </div>
     </div>
   </section>
 
-  <!-- Categories -->
+  <!-- 分类导航 -->
   <div class="container">
-    <div class="categories">
-      <a href="<%- url_for('/') %>" class="cat-item active">🌐 全部</a>
-      <a href="<%- url_for('/categories/教程') %>" class="cat-item">📚 教程</a>
-      <a href="<%- url_for('/categories/技能') %>" class="cat-item">✨ 技能</a>
-      <a href="<%- url_for('/categories/安全') %>" class="cat-item">🔒 安全</a>
-      <a href="<%- url_for('/categories/对比') %>" class="cat-item">⚖️ 对比</a>
-      <a href="<%- url_for('/categories/自动化') %>" class="cat-item">🤖 自动化</a>
-      <a href="<%- url_for('/categories/趋势') %>" class="cat-item">🔥 趋势</a>
+    <div class="cat-nav">
+      <a href="/" class="cat-btn active">🌐 全部文章</a>
+      <a href="/categories/教程/" class="cat-btn">📚 教程</a>
+      <a href="/categories/Skills开发/" class="cat-btn">✨ Skills开发</a>
+      <a href="/categories/自动化/" class="cat-btn">🤖 自动化</a>
+      <a href="/categories/安全配置/" class="cat-btn">🔒 安全</a>
+      <a href="/categories/对比/" class="cat-btn">⚖️ 对比</a>
+      <a href="/categories/趋势/" class="cat-btn">🔥 趋势</a>
+      <a href="/categories/AI集成/" class="cat-btn">🧠 AI集成</a>
     </div>
   </div>
 
-  <!-- Articles -->
-  <section class="articles-section">
+  <!-- 文章列表 -->
+  <section class="articles">
     <div class="container">
-      <h2 class="section-title">🔥 最新文章</h2>
+      <div class="section-header">
+        <h2 class="section-title">最新文章</h2>
+        <div class="view-btns">
+          <button class="view-btn active">▦</button>
+          <button class="view-btn">☰</button>
+        </div>
+      </div>
+      
       <div class="articles-grid">
-        <% page.posts.forEach(function(post, index){ %>
+        <% page.posts.forEach(function(post, i){ %>
           <article class="article-card">
-            <a href="<%- url_for(post.path) %>" class="article-link">
-              <div class="article-img" style="<%- getGradient(index) %>"><span class="article-emoji"><%- getEmoji(index) %></span></div>
-              <div class="article-body">
+            <a href="<%- url_for(post.path) %>">
+              <div class="article-img" style="<%- getBg(i) %>">
+                <span class="article-emoji"><%- getIcon(i) %></span>
+              </div>
+              <div class="article-content">
                 <div class="article-meta">
-                  <span class="article-cat" style="color:<%- getCatColor(post.category) %>">● <%- post.category || '教程' %></span>
+                  <span class="article-cat" style="color:<%- getColor(post.category) %>">● <%- post.category || '教程' %></span>
                   <span class="article-date"><%- date(post.date, 'YYYY-MM-DD') %></span>
                 </div>
                 <h3 class="article-title"><%- post.title %></h3>
@@ -87,6 +124,7 @@
           </article>
         <% }); %>
       </div>
+      
       <% if (page.total > 1) { %>
         <div class="pagination">
           <% for (var i = 1; i <= page.total; i++) { %>
@@ -97,45 +135,61 @@
     </div>
   </section>
 
-  <!-- Newsletter -->
-  <section class="newsletter">
+  <!-- 订阅 -->
+  <section class="subscribe">
     <div class="container">
-      <div class="newsletter-box">
+      <div class="sub-box">
         <h3>📧 订阅更新</h3>
         <p>获取最新 AI 教程和 OpenClaw 技巧</p>
-        <form><input type="email" placeholder="输入邮箱"><button>订阅</button></form>
+        <form class="sub-form"><input type="email" placeholder="输入邮箱"><button>订阅</button></form>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="container footer-inner">
-      <div class="footer-left">
-        <div class="footer-logo">🤖 <span><%= config.title %></span></div>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo">🤖 <%= config.title %></div>
         <p><%= config.description %></p>
       </div>
-      <div class="footer-links">
-        <div><h4>快速链接</h4><a href="/">首页</a><a href="/categories">分类</a><a href="/tags">标签</a></div>
-        <div><h4>资源</h4><a href="https://docs.openclaw.ai">官方文档</a><a href="https://github.com/openclaw/openclaw">GitHub</a></div>
+      <div class="footer-col">
+        <h4>快速链接</h4>
+        <a href="/">首页</a>
+        <a href="/categories/教程/">教程</a>
+        <a href="/categories/Skills开发/">Skills开发</a>
+        <a href="/tags/">标签</a>
+      </div>
+      <div class="footer-col">
+        <h4>热门分类</h4>
+        <a href="/categories/自动化/">自动化</a>
+        <a href="/categories/安全配置/">安全配置</a>
+        <a href="/categories/AI集成/">AI集成</a>
+        <a href="/archives/">文章归档</a>
+      </div>
+      <div class="footer-col">
+        <h4>资源</h4>
+        <a href="https://docs.openclaw.ai">官方文档</a>
+        <a href="https://github.com/openclaw/openclaw">GitHub</a>
+        <a href="https://discord.gg/openclaw">Discord</a>
       </div>
     </div>
-    <div class="footer-bottom">© 2024 <%= config.title %> · 由 OpenClaw 驱动</div>
+    <div class="footer-copy">© 2024 <%= config.title %> · 由 OpenClaw 驱动</div>
   </footer>
 </body>
 </html>
 
 <%
-function getGradient(i) {
+function getBg(i) {
   const g = ['background:linear-gradient(135deg,#667eea,#764ba2)','background:linear-gradient(135deg,#f093fb,#f5576c)','background:linear-gradient(135deg,#4facfe,#00f2fe)','background:linear-gradient(135deg,#43e97b,#38f9d7)','background:linear-gradient(135deg,#fa709a,#fee140)','background:linear-gradient(135deg,#a8edea,#fed6e3)'];
   return g[i % g.length];
 }
-function getEmoji(i) {
-  const e = ['🤖','🧠','✨','💡','🚀','⚡','🔧','🎯','💻','🎨','📚','🔒'];
+function getIcon(i) {
+  const e = ['🤖','🧠','✨','💡','🚀','⚡','🔧','🎯','💻','🎨','📚','🔒','📁','🔄','🎯'];
   return e[i % e.length];
 }
-function getCatColor(cat) {
-  const c = {'教程':'#0052FF','技能':'#7C3AED','安全':'#DC2626','对比':'#059669','自动化':'#D97706','趋势':'#EC4899'};
+function getColor(cat) {
+  const c = {'教程':'#0052FF','Skills开发':'#7C3AED','自动化':'#D97706','安全配置':'#DC2626','对比':'#059669','趋势':'#EC4899','AI集成':'#6366F1','安装配置':'#14B8A6'};
   return c[cat] || '#0052FF';
 }
 %>
