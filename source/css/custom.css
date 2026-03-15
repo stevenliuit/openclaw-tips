@@ -1,0 +1,91 @@
+/* 自定义颜色和样式 */
+:root {
+  --main-color: #2570ff;
+  --secondary-color: #00d2ff;
+}
+
+/* 链接颜色 */
+a {
+  color: #2570ff;
+}
+a:hover {
+  color: #00d2ff;
+}
+
+/* 分类标签颜色 */
+.category-tag, .category a {
+  color: #2570ff;
+  background: #e8f4ff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.category-tag:hover, .category a:hover {
+  background: #2570ff;
+  color: #fff;
+}
+
+/* 文章列表颜色区分 */
+.article-category {
+  color: #2570ff !important;
+}
+.article-tag {
+  color: #00d2ff !important;
+}
+
+/* 侧边栏分类 */
+.widget-list-category a {
+  color: #2570ff;
+}
+.widget-list-category a:hover {
+  color: #00d2ff;
+}
+
+/* 标签云颜色 */
+.tag-cloud a {
+  color: #2570ff;
+  border-color: #2570ff;
+}
+.tag-cloud a:hover {
+  background: #2570ff;
+  color: #fff;
+}
+
+/* 菜单颜色 */
+.menu a {
+  color: #555;
+}
+.menu a:hover {
+  color: #2570ff;
+}
+
+/* 按钮颜色 */
+.btn {
+  background: #2570ff;
+  border-color: #2570ff;
+}
+
+/* 分页颜色 */
+.pagination .page-number {
+  color: #555;
+}
+.pagination .current {
+  background: #2570ff;
+  color: #fff;
+}
+
+/* 加快加载 - 懒加载图片 */
+img[lazy] {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+img[lazy="loaded"] {
+  opacity: 1;
+}
+
+/* 代码高亮优化 */
+pre, code {
+  font-size: 13px;
+  line-height: 1.5;
+}
