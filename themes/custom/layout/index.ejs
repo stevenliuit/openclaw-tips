@@ -6,10 +6,15 @@
   <link rel="icon" type="image/x-icon" href="<%- url_for('/favicon.ico') %>">
   <title><%= config.title %></title>
   <meta name="description" content="<%= config.description %>">
+  
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  
   <%- css('css/custom.css') %>
 </head>
 <body>
@@ -17,53 +22,59 @@
   <header class="header">
     <div class="container header-inner">
       <a href="<%- url_for('/') %>" class="logo">
-        <div class="logo-icon">🤖</div>
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        </div>
         <span class="logo-text"><%= config.title %></span>
       </a>
       <nav class="nav">
-        <a href="<%- url_for('/') %>" class="nav-link"><i class="fas fa-home"></i> 首页</a>
-        <a href="<%- url_for('/categories') %>" class="nav-link"><i class="fas fa-folder"></i> 分类</a>
-        <a href="<%- url_for('/tags') %>" class="nav-link"><i class="fas fa-tags"></i> 标签</a>
-        <a href="<%- url_for('/archives') %>" class="nav-link"><i class="fas fa-archive"></i> 归档</a>
+        <a href="<%- url_for('/') %>" class="nav-link"><span class="nav-icon">🏠</span> 首页</a>
+        <div class="nav-dropdown">
+          <span class="nav-link"><span class="nav-icon">📁</span> 分类 <span class="dropdown-arrow">▼</span></span>
+          <div class="dropdown-menu">
+            <a href="<%- url_for('/categories/教程') %>"><span class="nav-icon">📚</span> 教程</a>
+            <a href="<%- url_for('/categories/技能') %>"><span class="nav-icon">✨</span> 技能</a>
+            <a href="<%- url_for('/categories/安全') %>"><span class="nav-icon">🔒</span> 安全</a>
+            <a href="<%- url_for('/categories/对比') %>"><span class="nav-icon">⚖️</span> 对比</a>
+            <a href="<%- url_for('/categories/自动化') %>"><span class="nav-icon">🤖</span> 自动化</a>
+            <a href="<%- url_for('/categories/趋势') %>"><span class="nav-icon">🔥</span> 趋势</a>
+          </div>
+        </div>
+        <a href="<%- url_for('/tags') %>" class="nav-link"><span class="nav-icon">🏷️</span> 标签</a>
+        <a href="<%- url_for('/archives') %>" class="nav-link"><span class="nav-icon">📅</span> 归档</a>
       </nav>
     </div>
   </header>
 
-  <!-- Hero with Search -->
+  <!-- Hero -->
   <section class="hero">
     <div class="hero-bg-pattern"></div>
     <div class="container">
-      <h1 class="hero-title">
-        <span><%= config.title %></span>
-      </h1>
+      <h1 class="hero-title"><span><%= config.title %></span></h1>
       <p class="hero-subtitle"><%= config.subtitle %></p>
       
       <!-- Search -->
       <div class="search-box">
         <div class="search-wrapper">
-          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
-          <input type="text" class="search-input" id="searchInput" placeholder="搜索文章、标签、分类...">
-          <div class="search-results" id="searchResults"></div>
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" id="searchInput" placeholder="搜索文章...">
         </div>
       </div>
 
-      <!-- Quick Stats -->
+      <!-- Stats -->
       <div class="stats">
         <div class="stat-card">
-          <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+          <div class="stat-icon">📄</div>
           <div class="stat-number">945+</div>
           <div class="stat-label">精选文章</div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon"><i class="fas fa-folder-open"></i></div>
+          <div class="stat-icon">📁</div>
           <div class="stat-number">12</div>
           <div class="stat-label">文章分类</div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon"><i class="fas fa-sync"></i></div>
+          <div class="stat-icon">🔄</div>
           <div class="stat-number">∞</div>
           <div class="stat-label">每日更新</div>
         </div>
@@ -71,51 +82,87 @@
     </div>
   </section>
 
-  <!-- Category Pills -->
+  <!-- Category Tree -->
   <div class="container">
-    <div class="category-pills">
-      <a href="<%- url_for('/') %>" class="category-pill active"><i class="fas fa-globe"></i> 全部</a>
-      <a href="<%- url_for('/categories/教程') %>" class="category-pill"><i class="fas fa-book"></i> 教程</a>
-      <a href="<%- url_for('/categories/技能') %>" class="category-pill"><i class="fas fa-magic"></i> 技能</a>
-      <a href="<%- url_for('/categories/安全') %>" class="category-pill"><i class="fas fa-shield-alt"></i> 安全</a>
-      <a href="<%- url_for('/categories/对比') %>" class="category-pill"><i class="fas fa-balance-scale"></i> 对比</a>
-      <a href="<%- url_for('/categories/自动化') %>" class="category-pill"><i class="fas fa-robot"></i> 自动化</a>
-      <a href="<%- url_for('/categories/趋势') %>" class="category-pill"><i class="fas fa-bolt"></i> 趋势</a>
+    <div class="category-tree">
+      <div class="category-tree-item active">
+        <span class="category-icon">🌐</span>
+        <span>全部</span>
+      </div>
+      <div class="category-tree-item has-sub">
+        <span class="category-icon">📚</span>
+        <span>教程</span>
+        <span class="expand-icon">▶</span>
+        <div class="sub-category">
+          <a href="/categories/教程/安装">安装配置</a>
+          <a href="/categories/教程/入门">入门指南</a>
+          <a href="/categories/教程/进阶">进阶教程</a>
+        </div>
+      </div>
+      <div class="category-tree-item has-sub">
+        <span class="category-icon">✨</span>
+        <span>技能</span>
+        <span class="expand-icon">▶</span>
+        <div class="sub-category">
+          <a href="/categories/技能/开发">技能开发</a>
+          <a href="/categories/技能/集成">技能集成</a>
+          <a href="/categories/技能/优化">技能优化</a>
+        </div>
+      </div>
+      <div class="category-tree-item">
+        <span class="category-icon">🔒</span>
+        <span>安全</span>
+      </div>
+      <div class="category-tree-item">
+        <span class="category-icon">⚖️</span>
+        <span>对比</span>
+      </div>
+      <div class="category-tree-item has-sub">
+        <span class="category-icon">🤖</span>
+        <span>自动化</span>
+        <span class="expand-icon">▶</span>
+        <div class="sub-category">
+          <a href="/categories/自动化/Cron">定时任务</a>
+          <a href="/categories/自动化/Webhook">Webhook</a>
+        </div>
+      </div>
+      <div class="category-tree-item">
+        <span class="category-icon">🔥</span>
+        <span>趋势</span>
+      </div>
     </div>
   </div>
 
-  <!-- Articles Grid -->
+  <!-- Articles -->
   <section class="articles-section">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title"><i class="fas fa-fire"></i> 最新文章</h2>
+        <h2 class="section-title"><span class="section-icon">🔥</span> 最新文章</h2>
         <div class="view-toggle">
-          <button class="view-btn active" data-view="grid"><i class="fas fa-th-large"></i></button>
-          <button class="view-btn" data-view="list"><i class="fas fa-list"></i></button>
+          <button class="view-btn active" data-view="grid" title="网格视图">▦</button>
+          <button class="view-btn" data-view="list" title="列表视图">☰</button>
         </div>
       </div>
       
       <div class="articles-grid" id="articlesGrid">
         <% page.posts.forEach(function(post, index){ %>
-          <article class="article-card" data-aos="fade-up" data-aos-delay="<%- index * 50 %>">
+          <article class="article-card" style="animation-delay: <%- index * 0.05 %>s">
             <a href="<%- url_for(post.path) %>" class="article-link">
-              <div class="article-image" style="background: <%- getRandomGradient() %>">
-                <i class="<%- getRandomIcon() %>"></i>
+              <div class="article-image" style="<%- getRandomGradient() %>">
+                <span class="article-emoji"><%- getRandomEmoji() %></span>
               </div>
               <div class="article-content">
                 <div class="article-meta">
-                  <span class="article-category" style="background: <%- getCategoryColor(post.category) %>20; color: <%- getCategoryColor(post.category) %>">
-                    <i class="fas fa-tag"></i> <%- post.category || '教程' %>
+                  <span class="article-category" style="background: <%- getCategoryBg(post.category) %>; color: <%- getCategoryColor(post.category) %>">
+                    <%- getCategoryIcon(post.category) %> <%- post.category || '教程' %>
                   </span>
-                  <span class="article-date"><i class="fas fa-calendar"></i> <%- date(post.date, 'YYYY-MM-DD') %></span>
+                  <span class="article-date">📅 <%- date(post.date, 'YYYY-MM-DD') %></span>
                 </div>
                 <h3 class="article-title"><%- post.title %></h3>
                 <p class="article-desc"><%- post.description || post.excerpt || '点击查看全文...' %></p>
                 <div class="article-footer">
-                  <span class="article-source">
-                    <i class="fas fa-globe-americas"></i> <%- post.source || 'OpenClaw Tips' %>
-                  </span>
-                  <span class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></span>
+                  <span class="article-source">🌐 <%- post.source || 'OpenClaw Tips' %></span>
+                  <span class="read-more">阅读全文 →</span>
                 </div>
               </div>
             </a>
@@ -123,23 +170,16 @@
         <% }); %>
       </div>
 
-      <!-- Load More / Pagination -->
       <% if (page.total > 1) { %>
         <nav class="pagination">
-          <% var prev = page.prev_link; %>
-          <% var next = page.next_link; %>
           <% if (page.prev) { %>
-            <a href="<%- prev %>" class="page-number"><i class="fas fa-chevron-left"></i></a>
+            <a href="<%- page.prev_link %>" class="page-number">‹</a>
           <% } %>
-          <% 
-            var start = Math.max(1, page.current - 2);
-            var end = Math.min(page.total, page.current + 2);
-            for (var i = start; i <= end; i++) { 
-          %>
+          <% for (var i = 1; i <= page.total; i++) { %>
             <a href="<%- url_for('page/' + i) %>" class="page-number <%= page.current === i ? 'current' : '' %>"><%- i %></a>
           <% } %>
           <% if (page.next) { %>
-            <a href="<%- next %>" class="page-number"><i class="fas fa-chevron-right"></i></a>
+            <a href="<%- page.next_link %>" class="page-number">›</a>
           <% } %>
         </nav>
       <% } %>
@@ -150,7 +190,7 @@
   <section class="newsletter">
     <div class="container">
       <div class="newsletter-card">
-        <div class="newsletter-icon"><i class="fas fa-envelope-open-text"></i></div>
+        <div class="newsletter-icon">📧</div>
         <h3 class="newsletter-title">订阅更新</h3>
         <p class="newsletter-desc">获取最新 AI 教程和 OpenClaw 技巧</p>
         <form class="newsletter-form">
@@ -171,9 +211,8 @@
         </div>
         <p class="footer-text"><%= config.description %></p>
         <div class="footer-social">
-          <a href="https://github.com/stevenliuit/openclaw-tips" class="social-link"><i class="fab fa-github"></i></a>
-          <a href="https://openclaw.ai" class="social-link"><i class="fas fa-robot"></i></a>
-          <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+          <a href="https://github.com/stevenliuit/openclaw-tips" class="social-link" title="GitHub">🐙</a>
+          <a href="https://openclaw.ai" class="social-link" title="OpenClaw">🤖</a>
         </div>
       </div>
       <div class="footer-links-group">
@@ -192,7 +231,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2024 <%= config.title %> · 由 <a href="https://openclaw.ai">OpenClaw</a> 驱动 · <a href="https://github.com/stevenliuit/openclaw-tips">GitHub</a></p>
+      <p>© 2024 <%= config.title %> · 由 <a href="https://openclaw.ai">OpenClaw</a> 驱动</p>
     </div>
   </footer>
 
@@ -210,29 +249,22 @@
       '平台': '#8B5CF6'
     };
     
-    function getCategoryColor(category) {
-      return categoryColors[category] || '#0052FF';
-    }
+    function getCategoryColor(cat) { return categoryColors[cat] || '#0052FF'; }
+    function getCategoryBg(cat) { return categoryColors[cat] + '15'; }
+    function getCategoryIcon(cat) { return {'教程':'📚','技能':'✨','安全':'🔒','对比':'⚖️','自动化':'🤖','趋势':'🔥'}[cat] || '📄'; }
     
-    function getRandomGradient() {
-      const gradients = [
-        'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-        'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-        'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-        'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-        'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-        'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
-        'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)'
-      ];
-      return gradients[Math.floor(Math.random() * gradients.length)];
-    }
+    const gradients = [
+      'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+      'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+      'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)'
+    ];
+    function getRandomGradient() { return gradients[Math.floor(Math.random() * gradients.length)]; }
     
-    function getRandomIcon() {
-      const icons = ['fas fa-robot', 'fas fa-brain', 'fas fa-magic', 'fas fa-code', 'fas fa-lightbulb', 
-                     'fas fa-rocket', 'fas fa-cogs', 'fas fa-sparkles', 'fas fa-microchip', 'fas fafinity'];
-      return icons[Math.floor(Math.random() * icons.length)];
-    }
+    const emojis = ['🤖','🧠','✨','💡','🚀','⚡','🔧','🎯','💻','🎨'];
+    function getRandomEmoji() { return emojis[Math.floor(Math.random() * emojis.length)]; }
 
     // View toggle
     document.querySelectorAll('.view-btn').forEach(btn => {
@@ -240,23 +272,15 @@
         document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const grid = document.getElementById('articlesGrid');
-        if (btn.dataset.view === 'list') {
-          grid.classList.add('list-view');
-        } else {
-          grid.classList.remove('list-view');
-        }
+        grid.classList.toggle('list-view', btn.dataset.view === 'list');
       });
     });
 
-    // Simple search
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase();
-      if (query.length < 2) {
-        document.getElementById('searchResults').innerHTML = '';
-        return;
-      }
-      // Search would go here - for now just show placeholder
+    // Category expand
+    document.querySelectorAll('.category-tree-item.has-sub').forEach(item => {
+      item.addEventListener('click', () => {
+        item.classList.toggle('expanded');
+      });
     });
   </script>
 </body>
@@ -264,34 +288,29 @@
 
 <%
 function getRandomGradient() {
-  const gradients = [
+  const g = [
     'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
     'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
     'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-    'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-    'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)'
+    'linear-gradient(135deg, #fa709a 0%, #fee140 100%)'
   ];
-  return gradients[Math.floor(Math.random() * gradients.length)];
+  return g[Math.floor(Math.random() * g.length)];
 }
-
-function getRandomIcon() {
-  const icons = ['fa-robot', 'fa-brain', 'fa-magic', 'fa-code', 'fa-lightbulb', 'fa-rocket', 'fa-cogs', 'fa-sparkles'];
-  return icons[Math.floor(Math.random() * icons.length)];
+function getRandomEmoji() {
+  const e = ['🤖','🧠','✨','💡','🚀','⚡','🔧','🎯','💻','🎨'];
+  return e[Math.floor(Math.random() * e.length)];
 }
-
-function getCategoryColor(category) {
-  const colors = {
-    '教程': '#0052FF',
-    '技能': '#7C3AED',
-    '安全': '#DC2626',
-    '对比': '#059669',
-    '自动化': '#D97706',
-    '趋势': '#EC4899',
-    '概念': '#6366F1',
-    '开发': '#14B8A6',
-    '平台': '#8B5CF6'
-  };
-  return colors[category] || '#0052FF';
+function getCategoryColor(cat) {
+  const c = {'教程':'#0052FF','技能':'#7C3AED','安全':'#DC2626','对比':'#059669','自动化':'#D97706','趋势':'#EC4899'};
+  return c[cat] || '#0052FF';
+}
+function getCategoryBg(cat) {
+  const c = {'教程':'#EEF2FF','技能':'#F3E8FF','安全':'#FEE2E2','对比':'#D1FAE5','自动化':'#FEF3C7','趋势':'#FCE7F3'};
+  return c[cat] || '#EEF2FF';
+}
+function getCategoryIcon(cat) {
+  const i = {'教程':'📚','技能':'✨','安全':'🔒','对比':'⚖️','自动化':'🤖','趋势':'🔥'};
+  return i[cat] || '📄';
 }
 %>
