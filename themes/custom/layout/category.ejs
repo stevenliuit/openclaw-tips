@@ -18,67 +18,79 @@
       <nav class="nav">
         <a href="<%- url_for('/') %>" class="nav-link">首页</a>
         <div class="nav-group">
-          <span class="nav-link">文章分类 ▾</span>
+          <span class="nav-link">分类 ▾</span>
           <div class="group-menu">
-            <div class="group-col"><h4>📚 教程</h4><a href="/categories/安装配置/">安装配置</a><a href="/categories/入门指南/">入门指南</a></div>
-            <div class="group-col"><h4>✨ 技能</h4><a href="/categories/Skills开发/">Skills开发</a><a href="/categories/技能集成/">技能集成</a></div>
-            <div class="group-col"><h4>🔒 安全</h4><a href="/categories/安全配置/">安全配置</a><a href="/categories/运维监控/">运维监控</a></div>
-            <div class="group-col"><h4>🤖 自动化</h4><a href="/categories/自动化/">自动化</a><a href="/categories/Cron/">定时任务</a></div>
-            <div class="group-col"><h4>🔥 趋势</h4><a href="/categories/对比/">对比</a><a href="/categories/评测/">评测</a></div>
+            <div class="group-col"><h4>教程</h4><a href="/categories/教程/">教程</a><a href="/categories/安装配置/">安装</a></div>
+            <div class="group-col"><h4>技能</h4><a href="/categories/Skills开发/">Skills</a><a href="/categories/技能集成/">集成</a></div>
+            <div class="group-col"><h4>自动化</h4><a href="/categories/自动化/">自动化</a><a href="/categories/Cron/">Cron</a></div>
+            <div class="group-col"><h4>安全</h4><a href="/categories/安全配置/">安全</a><a href="/categories/运维监控/">运维</a></div>
+            <div class="group-col"><h4>其他</h4><a href="/categories/对比/">对比</a><a href="/categories/趋势/">趋势</a></div>
           </div>
         </div>
-        <a href="<%- url_for('/tags') %>" class="nav-link">标签云</a>
+        <a href="<%- url_for('/tags') %>" class="nav-link">标签</a>
         <a href="<%- url_for('/archives') %>" class="nav-link">归档</a>
       </nav>
     </div>
   </header>
 
-  <!-- 分类tab -->
-  <div class="cat-bar">
-    <div class="container">
-      <div class="cat-tabs">
-        <a href="/categories/教程/" class="cat-tab">📚 教程</a>
-        <a href="/categories/Skills开发/" class="cat-tab">✨ Skills开发</a>
-        <a href="/categories/技能集成/" class="cat-tab">🔧 技能集成</a>
-        <a href="/categories/自动化/" class="cat-tab">🤖 自动化</a>
-        <a href="/categories/安全配置/" class="cat-tab">🔒 安全</a>
-        <a href="/categories/运维监控/" class="cat-tab">📡 运维</a>
-        <a href="/categories/对比/" class="cat-tab">⚖️ 对比</a>
-        <a href="/categories/评测/" class="cat-tab">📊 评测</a>
-        <a href="/categories/趋势/" class="cat-tab">🔥 趋势</a>
+  <div class="page-layout">
+    <!-- 左侧分类 -->
+    <aside class="sidebar">
+      <h3 class="sidebar-title">📁 文章分类</h3>
+      <div class="sidebar-cats">
+        <a href="/" class="sidebar-cat">🌐 全部文章</a>
+        <a href="/categories/教程/" class="sidebar-cat">📚 教程</a>
+        <a href="/categories/Skills开发/" class="sidebar-cat">✨ Skills开发</a>
+        <a href="/categories/技能集成/" class="sidebar-cat">🔧 技能集成</a>
+        <a href="/categories/自动化/" class="sidebar-cat">🤖 自动化</a>
+        <a href="/categories/安全配置/" class="sidebar-cat">🔒 安全</a>
+        <a href="/categories/运维监控/" class="sidebar-cat">📡 运维</a>
+        <a href="/categories/对比/" class="sidebar-cat">⚖️ 对比</a>
+        <a href="/categories/评测/" class="sidebar-cat">📊 评测</a>
+        <a href="/categories/趋势/" class="sidebar-cat">🔥 趋势</a>
       </div>
-    </div>
-  </div>
+    </aside>
 
-  <section class="hero" style="padding:30px 24px">
-    <div class="container">
-      <h1 class="page-title"><span class="cat-icon"><%- {'教程':'📚','Skills开发':'✨','技能集成':'🔧','自动化':'🤖','安全配置':'🔒','运维监控':'📡','对比':'⚖️','评测':'📊','趋势':'🔥'}[page.category] || '📄' %></span> <%= page.category %></h1>
-      <p class="page-subtitle">共 <%= page.posts.length %> 篇文章</p>
-    </div>
-  </section>
+    <!-- 右侧内容 -->
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title"><%= page.category %> <span class="page-count">(<%= page.posts.length %>)</span></h1>
+      </div>
 
-  <section class="articles">
-    <div class="container">
-      <div class="article-list">
+      <div class="articles-grid">
         <% page.posts.forEach(function(post, i){ %>
-          <a href="<%- url_for(post.path) %>" class="article-item">
-            <span class="article-day"><%- date(post.date, 'DD') %></span>
-            <div class="article-info">
-              <h3 class="article-name"><%- post.title %></h3>
-              <p class="article-excerpt"><%- post.description || post.excerpt || '点击查看全文...' %></p>
-            </div>
-            <span class="article-arrow">→</span>
-          </a>
+          <article class="article-card">
+            <a href="<%- url_for(post.path) %>">
+              <div class="article-img" style="<%- ['background:linear-gradient(135deg,#667eea,#764ba2)','background:linear-gradient(135deg,#f093fb,#f5576c)','background:linear-gradient(135deg,#4facfe,#00f2fe)','background:linear-gradient(135deg,#43e97b,#38f9d7)','background:linear-gradient(135deg,#fa709a,#fee140)'][i%5] %>">
+                <span class="article-emoji"><%- ['🤖','🧠','✨','💡','🚀','⚡','🔧'][i%7] %></span>
+              </div>
+              <div class="article-content">
+                <div class="article-meta">
+                  <span class="article-date"><%- date(post.date, 'YYYY-MM-DD') %></span>
+                </div>
+                <h3 class="article-title"><%- post.title %></h3>
+                <p class="article-desc"><%- post.description || post.excerpt || '点击查看...' %></p>
+              </div>
+            </a>
+          </article>
         <% }); %>
       </div>
-    </div>
-  </section>
+
+      <% if (page.total > 1) { %>
+        <div class="pagination">
+          <% for (var i = 1; i <= page.total; i++) { %>
+            <a href="<%- url_for('page/' + i) %>" class="page-num <%= page.current === i ? 'curr' : '' %>"><%- i %></a>
+          <% } %>
+        </div>
+      <% } %>
+    </main>
+  </div>
 
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-col"><div class="footer-logo">🤖 <%= config.title %></div><p><%= config.description %></p></div>
-      <div class="footer-col"><h4>快速链接</h4><a href="/">首页</a><a href="/categories">分类</a><a href="/tags">标签</a></div>
-      <div class="footer-col"><h4>资源</h4><a href="https://docs.openclaw.ai">文档</a><a href="https://github.com/openclaw/openclaw">GitHub</a></div>
+      <div class="footer-col"><h4>链接</h4><a href="/">首页</a><a href="/categories">分类</a><a href="/tags">标签</a></div>
+      <div class="footer-col"><h4>资源</h4><a href="https://docs.openclaw.ai">文档</a></div>
     </div>
     <div class="footer-copy">© 2024 <%= config.title %></div>
   </footer>

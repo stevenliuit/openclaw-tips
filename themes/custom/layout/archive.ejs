@@ -32,33 +32,53 @@
     </div>
   </header>
 
-  <section class="hero" style="padding:40px 24px">
-    <div class="container">
-      <h1 class="page-title"><span>📅</span> 文章归档</h1>
-    </div>
-  </section>
-
-  <section class="articles">
-    <div class="container">
-      <div class="timeline">
+  <div class="page-layout">
+    <aside class="sidebar">
+      <h3 class="sidebar-title">📅 文章归档</h3>
+      <div class="sidebar-cats">
         <% 
-          var posts = site.posts.sort('date', -1);
-          var currentYear = '';
-          posts.forEach(function(post){
-            var year = date(post.date, 'YYYY');
-            if(year !== currentYear){
-              currentYear = year;
+          var years = {};
+          site.posts.forEach(function(post){
+            var y = date(post.date, 'YYYY');
+            if(!years[y]) years[y] = 0;
+            years[y]++;
+          });
+          Object.keys(years).sort().reverse().forEach(function(y){ 
         %>
-          <div class="timeline-year"><%= year %> 年</div>
-        <% } %>
-          <a href="<%- url_for(post.path) %>" class="timeline-item">
-            <span class="timeline-date"><%- date(post.date, 'MM-DD') %></span>
-            <span class="timeline-title"><%- post.title %></span>
-          </a>
+          <a href="<%- url_for('/archives') %>#<%= y %>" class="sidebar-cat"><%= y %> 年 (<%= years[y] %>)</a>
         <% }); %>
       </div>
-    </div>
-  </section>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">📅 文章归档 <span class="page-count">(<%= site.posts.length %>)</span></h1>
+      </div>
+
+      <% 
+        var posts = site.posts.sort('date', -1);
+        var currentYear = '';
+        var count = 0;
+        posts.forEach(function(post){
+          var year = date(post.date, 'YYYY');
+          if(year !== currentYear){ 
+            if(count > 0){
+      %>
+        </div>
+      <%      } count++; %>
+        <div class="archive-group" id="<%= year %>">
+          <h2 class="archive-year"><%= year %> 年</h2>
+          <div class="archive-list">
+      <%    currentYear = year; } %>
+            <a href="<%- url_for(post.path) %>" class="archive-item">
+              <span class="archive-date"><%- date(post.date, 'MM-DD') %></span>
+              <span class="archive-title"><%- post.title %></span>
+            </a>
+        <% }); %>
+          </div>
+        </div>
+    </main>
+  </div>
 
   <footer class="footer">
     <div class="container footer-grid">
