@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= config.title %></title>
+  <meta name="description" content="<%= config.description %>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Calistoga&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <%- css('css/custom.css') %>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="<%- url_for('/') %>" class="logo">
+        <div class="logo-icon">🤖</div>
+        <span class="logo-text"><%= config.title %></span>
+      </a>
+      <nav class="nav">
+        <a href="<%- url_for('/') %>" class="nav-link">首页</a>
+        <a href="<%- url_for('/categories/教程') %>" class="nav-link">教程</a>
+        <a href="<%- url_for('/categories/技能') %>" class="nav-link">技能</a>
+        <a href="<%- url_for('/tags') %>" class="nav-link">标签</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title">
+        <span><%= config.title %></span>
+      </h1>
+      <p class="hero-subtitle"><%= config.subtitle %></p>
+      
+      <div class="search-box">
+        <div class="search-wrapper">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" class="search-input" placeholder="搜索文章...">
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-number">945+</div>
+          <div class="stat-label">精选文章</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">12</div>
+          <div class="stat-label">文章分类</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">∞</div>
+          <div class="stat-label">每日更新</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Articles -->
+  <section class="articles-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">最新文章</h2>
+      </div>
+      
+      <div class="articles-grid">
+        <% page.posts.forEach(function(post){ %>
+          <article class="article-card">
+            <a href="<%- url_for(post.path) %>">
+              <div class="article-image">📄</div>
+              <div class="article-content">
+                <div class="article-meta">
+                  <span class="article-category"><%- post.category || '教程' %></span>
+                  <span class="article-date"><%- date(post.date, 'YYYY-MM-DD') %></span>
+                </div>
+                <h3 class="article-title"><%- post.title %></h3>
+                <p class="article-desc"><%- post.description || post.excerpt || '' %></p>
+                <div class="article-footer">
+                  <span class="article-source">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <path d="M2 12h20"></path>
+                    </svg>
+                    <%- post.source || 'OpenClaw Tips' %>
+                  </span>
+                </div>
+              </div>
+            </a>
+          </article>
+        <% }); %>
+      </div>
+
+      <!-- Pagination -->
+      <% if (page.total > 1) { %>
+        <nav class="pagination">
+          <% var prev = page.prev_link ? page.prev_link : '#'; %>
+          <% var next = page.next_link ? page.next_link : '#'; %>
+          <% if (page.prev) { %>
+            <a href="<%- prev %>" class="page-number">‹</a>
+          <% } %>
+          <% for (var i = 1; i <= page.total; i++) { %>
+            <a href="<%- url_for('page/' + i) %>" class="page-number <%= page.current === i ? 'current' : '' %>"><%= i %></a>
+          <% } %>
+          <% if (page.next) { %>
+            <a href="<%- next %>" class="page-number">›</a>
+          <% } %>
+        </nav>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-text">
+        © 2024 <%= config.title %> · 由 OpenClaw 驱动
+      </div>
+      <div class="footer-links">
+        <a href="<%- url_for('/') %>" class="footer-link">首页</a>
+        <a href="https://github.com/stevenliuit/openclaw-tips" class="footer-link">GitHub</a>
+        <a href="https://openclaw.ai" class="footer-link">OpenClaw</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

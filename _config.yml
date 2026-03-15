@@ -1,18 +1,4 @@
-# Hexo Configuration
-
-# 优化加载速度
-static_files:
-  - .jpg
-  - .jpeg
-  - .png
-  - .gif
-  - .ico
-  - .svg
-
-# 不渲染的文件
-skip_render:
-  - css/*.css
-  - js/*.js
+# Open AI 分享站 - Hexo Configuration
 
 url: https://stevenliuit.github.io
 root: /
@@ -62,12 +48,17 @@ category_map:
   automation: 自动化
   platforms: 平台
 
-# Pagination
-per_page: 15
+# Pagination - 减少每页文章数提高加载速度
+per_page: 12
 pagination_dir: page
 
+# 不渲染的文件
+skip_render:
+  - css/*
+  - js/*
+
 # Extension
-theme: landscape
+theme: custom
 
 # Deployment
 deploy:
