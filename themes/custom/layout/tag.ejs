@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="<%- url_for('/favicon.ico') %>">
-  <title><%= page.tag ? page.tag : '标签云' %> - <%= config.title %></title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>标签云 - <%= config.title %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <%- css('css/custom.css') %>
 </head>
 <body>
@@ -15,77 +15,52 @@
         <div class="logo-icon">🤖</div>
         <span class="logo-text"><%= config.title %></span>
       </a>
-      <nav class="nav">
+      <nav class="nav" style="margin-left:auto">
         <a href="<%- url_for('/') %>" class="nav-link">首页</a>
-        <div class="nav-group">
-          <span class="nav-link">分类 ▾</span>
-          <div class="group-menu">
-            <div class="group-col"><h4>教程</h4><a href="/categories/教程/">教程</a></div>
-            <div class="group-col"><h4>技能</h4><a href="/categories/Skills开发/">Skills</a></div>
-            <div class="group-col"><h4>自动化</h4><a href="/categories/自动化/">自动化</a></div>
-            <div class="group-col"><h4>安全</h4><a href="/categories/安全配置/">安全</a></div>
-            <div class="group-col"><h4>其他</h4><a href="/categories/对比/">对比</a></div>
-          </div>
-        </div>
-        <a href="<%- url_for('/tags') %>" class="nav-link">标签</a>
+        <a href="<%- url_for('/categories') %>" class="nav-link">分类</a>
+        <a href="<%- url_for('/tags') %>" class="nav-link">标签云</a>
         <a href="<%- url_for('/archives') %>" class="nav-link">归档</a>
       </nav>
     </div>
   </header>
 
-  <div class="page-layout">
-    <!-- 左侧 -->
-    <aside class="sidebar">
-      <h3 class="sidebar-title">🏷️ 标签云</h3>
-      <div class="tag-cloud">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <h1 class="hero-title"><span>🏷️</span> 标签云</h1>
+      <p class="hero-subtitle">共 <%= site.tags.length %> 个标签</p>
+    </div>
+  </section>
+
+  <section class="tech-tags">
+    <div class="container">
+      <div class="tag-grid">
         <% 
           var allTags = [];
+          var tagCounts = {};
           site.posts.forEach(function(post){
             if(post.tags){
               post.tags.forEach(function(tag){
-                if(allTags.indexOf(tag.name) === -1) allTags.push(tag.name);
+                var name = tag.name;
+                if(!tagCounts[name]){
+                  tagCounts[name] = 0;
+                  allTags.push(name);
+                }
+                tagCounts[name]++;
               });
             }
           });
+          allTags.sort();
         %>
         <% allTags.forEach(function(tag){ %>
-          <a href="<%- url_for('/tags/' + tag) %>" class="tag-link"><%- tag %></a>
+          <a href="<%- url_for('/tags/' + tag) %>" class="tech-tag" style="--i:<%= Math.floor(Math.random() * 20) %>">
+            <span class="tag-name"><%- tag %></span>
+            <span class="tag-num"><%- tagCounts[tag] %></span>
+          </a>
         <% }); %>
       </div>
-    </aside>
-
-    <!-- 右侧内容 -->
-    <main class="main-content">
-      <% if (page.tag) { %>
-        <div class="page-header">
-          <h1 class="page-title">🏷️ <%= page.tag %> <span class="page-count">(<%= page.posts.length %>)</span></h1>
-        </div>
-        <div class="articles-grid">
-          <% page.posts.forEach(function(post, i){ %>
-            <article class="article-card">
-              <a href="<%- url_for(post.path) %>">
-                <div class="article-img" style="<%- ['background:linear-gradient(135deg,#667eea,#764ba2)','background:linear-gradient(135deg,#f093fb,#f5576c)','background:linear-gradient(135deg,#4facfe,#00f2fe)','background:linear-gradient(135deg,#43e97b,#38f9d7)'][i%4] %>">
-                  <span class="article-emoji"><%- ['🤖','🧠','✨','💡','🚀','⚡'][i%6] %></span>
-                </div>
-                <div class="article-content">
-                  <div class="article-meta">
-                    <span class="article-date"><%- date(post.date, 'YYYY-MM-DD') %></span>
-                  </div>
-                  <h3 class="article-title"><%- post.title %></h3>
-                  <p class="article-desc"><%- post.description || post.excerpt || '点击查看...' %></p>
-                </div>
-              </a>
-            </article>
-          <% }); %>
-        </div>
-      <% } else { %>
-        <div class="page-header">
-          <h1 class="page-title">🏷️ 标签云</h1>
-          <p class="page-subtitle">共 <%= allTags.length %> 个标签</p>
-        </div>
-      <% } %>
-    </main>
-  </div>
+    </div>
+  </section>
 
   <footer class="footer">
     <div class="container footer-grid">
