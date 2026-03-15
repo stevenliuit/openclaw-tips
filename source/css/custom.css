@@ -7,7 +7,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 
 /* Header */
 .header{background:var(--card);border-bottom:1px solid var(--b);position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
-.header-inner{max-width:1300px;margin:0 auto;padding:0 24px;height:66px;display:flex;align-items:center;justify-content:space-between}
+.header-inner{max-width:1300px;margin:0 auto;padding:0 24px;height:66px;display:flex;align-items:center;justify-content:flex-start;gap:20px}
 .logo{display:flex;align-items:center;gap:12px}
 .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--c),var(--c2));border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:18px}
 .logo-text{font-size:21px;font-weight:700}
@@ -45,7 +45,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 /* Articles */
 .articles{padding:36px 0 60px}
 .container{max-width:1300px;margin:0 auto;padding:0 24px}
-.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.section-header{display:flex;justify-content:flex-start;gap:20px;align-items:center;margin-bottom:24px}
 .section-title{font-size:22px;font-weight:700}
 .view-btns{display:flex;gap:6px}
 .view-btn{width:36px;height:36px;border:1px solid var(--b);background:var(--card);border-radius:8px;cursor:pointer;font-size:14px}
@@ -57,7 +57,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .article-img{height:155px;display:flex;align-items:center;justify-content:center}
 .article-emoji{font-size:52px}
 .article-content{padding:20px}
-.article-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:13px}
+.article-meta{display:flex;justify-content:flex-start;gap:20px;align-items:center;margin-bottom:12px;font-size:13px}
 .article-cat{font-weight:600}
 .article-date{color:var(--text2)}
 .article-title{font-size:17px;font-weight:600;margin-bottom:10px;line-height:1.4}
