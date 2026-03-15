@@ -52,10 +52,10 @@ category_map:
 per_page: 12
 pagination_dir: page
 
-# 不渲染的文件
+# 不渲染的图片和其他资源文件
 skip_render:
-  - css/*
-  - js/*
+  - "*.ico"
+  - "images/*"
 
 # Extension
 theme: custom

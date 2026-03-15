@@ -38,6 +38,16 @@
   --font-mono: 'JetBrains Mono', monospace;
 }
 
+/* 基础链接样式 */
+a {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+a:hover {
+  text-decoration: none !important;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; }
