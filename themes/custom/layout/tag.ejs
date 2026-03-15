@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="<%- url_for('/favicon.ico') %>">
-  <title>标签云 - <%= config.title %></title>
+  <title>标签 - <%= config.title %></title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <%- css('css/custom.css') %>
 </head>
@@ -18,7 +18,7 @@
       <nav class="nav" style="">
         <a href="<%- url_for('/') %>" class="nav-link">首页</a>
         <a href="<%- url_for('/categories') %>" class="nav-link">分类</a>
-        <a href="<%- url_for('/tags') %>" class="nav-link">标签云</a>
+        <a href="<%- url_for('/tags') %>" class="nav-link">标签</a>
         <a href="<%- url_for('/archives') %>" class="nav-link">归档</a>
       </nav>
     </div>
@@ -27,7 +27,7 @@
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="container">
-      <h1 class="hero-title"><span>🏷️</span> 标签云</h1>
+      <h1 class="hero-title"><span>🏷️</span> 标签</h1>
       <p class="hero-subtitle">共 <%= site.tags.length %> 个标签</p>
     </div>
   </section>

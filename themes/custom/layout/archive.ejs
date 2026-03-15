@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="<%- url_for('/favicon.ico') %>">
-  <title>文章归档 - <%= config.title %></title>
+  <title>归档 - <%= config.title %></title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <%- css('css/custom.css') %>
 </head>
@@ -34,7 +34,7 @@
 
   <div class="page-layout">
     <aside class="sidebar">
-      <h3 class="sidebar-title">📅 文章归档</h3>
+      <h3 class="sidebar-title">📅 归档</h3>
       <div class="sidebar-cats">
         <% 
           var years = {};
@@ -52,7 +52,7 @@
 
     <main class="main-content">
       <div class="page-header">
-        <h1 class="page-title">📅 文章归档 <span class="page-count">(<%= site.posts.length %>)</span></h1>
+        <h1 class="page-title">📅 归档 <span class="page-count">(<%= site.posts.length %>)</span></h1>
       </div>
 
       <% 
