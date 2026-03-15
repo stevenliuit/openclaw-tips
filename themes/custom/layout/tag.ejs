@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="<%- url_for('/favicon.ico') %>">
+  <title>标签云 - <%= config.title %></title>
+  <meta name="description" content="<%= config.description %>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <%- css('css/custom.css') %>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="<%- url_for('/') %>" class="logo">
+        <div class="logo-icon">🤖</div>
+        <span class="logo-text"><%= config.title %></span>
+      </a>
+      <nav class="nav">
+        <a href="<%- url_for('/') %>" class="nav-link">首页</a>
+        <div class="nav-group">
+          <span class="nav-link">文章分类 ▾</span>
+          <div class="group-menu">
+            <div class="group-col"><h4>📚 基础教程</h4><a href="/categories/安装配置/">安装配置</a><a href="/categories/入门指南/">入门指南</a></div>
+            <div class="group-col"><h4>✨ 技能开发</h4><a href="/categories/Skills开发/">Skills开发</a><a href="/categories/技能集成/">技能集成</a></div>
+            <div class="group-col"><h4>🔒 安全运维</h4><a href="/categories/安全配置/">安全配置</a><a href="/categories/运维监控/">运维监控</a></div>
+            <div class="group-col"><h4>🔥 进阶主题</h4><a href="/categories/自动化/">自动化</a><a href="/categories/AI集成/">AI集成</a></div>
+            <div class="group-col"><h4>⚖️ 对比评测</h4><a href="/categories/对比/">工具对比</a><a href="/categories/趋势/">趋势</a></div>
+          </div>
+        </div>
+        <a href="<%- url_for('/tags') %>" class="nav-link">标签云</a>
+        <a href="<%- url_for('/archives') %>" class="nav-link">文章归档</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="padding:40px 24px">
+    <div class="container">
+      <h1 class="hero-title"><span>🏷️ 标签云</span></h1>
+      <p class="hero-subtitle">按标签浏览文章</p>
+    </div>
+  </section>
+
+  <section class="articles">
+    <div class="container">
+      <div class="tag-cloud">
+        <% site.tags.forEach(function(tag){ %>
+          <a href="<%- url_for('/tags/' + tag.name) %>" class="tag-item" style="font-size:<%- Math.min(1.2, 0.8 + tag.length/100) %>rem">
+            <%- tag.name %> <span class="tag-count"><%- tag.length %></span>
+          </a>
+        <% }); %>
+      </div>
+      
+      <% if (page.posts && page.posts.length > 0) { %>
+      <h2 class="section-title" style="margin-top:40px">🏷️ <%= page.tag %> 相关文章</h2>
+      <div class="articles-grid">
+        <% page.posts.forEach(function(post, i){ %>
+          <article class="article-card">
+            <a href="<%- url_for(post.path) %>">
+              <div class="article-img" style="<%- ['background:linear-gradient(135deg,#667eea,#764ba2)','background:linear-gradient(135deg,#f093fb,#f5576c)','background:linear-gradient(135deg,#4facfe,#00f2fe)','background:linear-gradient(135deg,#43e97b,#38f9d7)'][i%4] %>">
+                <span class="article-emoji"><%- ['🤖','🧠','✨','💡','🚀','⚡'][i%6] %></span>
+              </div>
+              <div class="article-content">
+                <div class="article-meta">
+                  <span class="article-date"><%- date(post.date, 'YYYY-MM-DD') %></span>
+                </div>
+                <h3 class="article-title"><%- post.title %></h3>
+                <p class="article-desc"><%- post.description || post.excerpt || '点击查看...' %></p>
+              </div>
+            </a>
+          </article>
+        <% }); %>
+      </div>
+      <% } %>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-col"><div class="footer-logo">🤖 <%= config.title %></div><p><%= config.description %></p></div>
+      <div class="footer-col"><h4>快速链接</h4><a href="/">首页</a><a href="/categories">分类</a><a href="/tags">标签</a><a href="/archives">归档</a></div>
+      <div class="footer-col"><h4>资源</h4><a href="https://docs.openclaw.ai">官方文档</a><a href="https://github.com/openclaw/openclaw">GitHub</a></div>
+    </div>
+    <div class="footer-copy">© 2024 <%= config.title %></div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="<%- url_for('/favicon.ico') %>">
+  <title>文章归档 - <%= config.title %></title>
+  <meta name="description" content="<%= config.description %>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <%- css('css/custom.css') %>
+  <style>
+    .archive-list{max-width:900px;margin:0 auto;padding:0 24px}
+    .archive-year{margin-bottom:36px}
+    .archive-year h2{font-size:22px;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--c);color:var(--c)}
+    .archive-item{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--b)}
+    .archive-item:hover{background:#F8FAFC}
+    .archive-date{color:var(--text2);font-size:14px;min-width:90px}
+    .archive-title{font-size:16px;font-weight:500;color:var(--text)}
+    .archive-title:hover{color:var(--c)}
+    .tag-cloud{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding:32px}
+    .tag-item{padding:8px 18px;background:var(--card);border:1px solid var(--b);border-radius:24px;font-size:14px;color:var(--text2);transition:0.2s}
+    .tag-item:hover{background:var(--c);border-color:var(--c);color:#FFF}
+    .tag-count{font-size:12px;opacity:0.7;margin-left:4px}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="<%- url_for('/') %>" class="logo">
+        <div class="logo-icon">🤖</div>
+        <span class="logo-text"><%= config.title %></span>
+      </a>
+      <nav class="nav">
+        <a href="<%- url_for('/') %>" class="nav-link">首页</a>
+        <div class="nav-group">
+          <span class="nav-link">文章分类 ▾</span>
+          <div class="group-menu">
+            <div class="group-col"><h4>📚 教程</h4><a href="/categories/教程/">教程</a><a href="/categories/安装配置/">安装</a></div>
+            <div class="group-col"><h4>✨ 技能</h4><a href="/categories/Skills开发/">Skills</a></div>
+            <div class="group-col"><h4>🔒 安全</h4><a href="/categories/安全配置/">安全</a></div>
+            <div class="group-col"><h4>🔥 自动化</h4><a href="/categories/自动化/">自动化</a></div>
+            <div class="group-col"><h4>⚖️ 对比</h4><a href="/categories/对比/">对比</a></div>
+          </div>
+        </div>
+        <a href="<%- url_for('/tags') %>" class="nav-link">标签云</a>
+        <a href="<%- url_for('/archives') %>" class="nav-link">文章归档</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" style="padding:40px 24px">
+    <div class="container">
+      <h1 class="hero-title"><span>📅 文章归档</span></h1>
+      <p class="hero-subtitle">按时间浏览所有文章</p>
+    </div>
+  </section>
+
+  <section class="articles">
+    <div class="archive-list">
+      <% 
+        var archives = {};
+        site.posts.forEach(function(post){
+          var year = date(post.date, 'YYYY');
+          if(!archives[year]) archives[year] = [];
+          archives[year].push(post);
+        });
+        var years = Object.keys(archives).sort().reverse();
+      %>
+      <% years.forEach(function(year){ %>
+        <div class="archive-year">
+          <h2>📅 <%= year %> 年</h2>
+          <% archives[year].forEach(function(post){ %>
+            <a href="<%- url_for(post.path) %>" class="archive-item">
+              <span class="archive-date"><%- date(post.date, 'MM-DD') %></span>
+              <span class="archive-title"><%- post.title %></span>
+            </a>
+          <% }); %>
+        </div>
+      <% }); %>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-col"><div class="footer-logo">🤖 <%= config.title %></div><p><%= config.description %></p></div>
+      <div class="footer-col"><h4>快速链接</h4><a href="/">首页</a><a href="/categories">分类</a><a href="/tags">标签</a><a href="/archives">归档</a></div>
+      <div class="footer-col"><h4>资源</h4><a href="https://docs.openclaw.ai">官方文档</a><a href="https://github.com/openclaw/openclaw">GitHub</a></div>
+    </div>
+    <div class="footer-copy">© 2024 <%= config.title %></div>
+  </footer>
+</body>
+</html>
