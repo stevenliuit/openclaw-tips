@@ -1,8 +1,9 @@
-import { Article, ArticleFile, Category } from '@/types/article';
+import { Article, Category } from '@/types/article';
 import fs from 'fs';
 import path from 'path';
+import matter from 'gray-matter';
 
-const ARTICLES_DIR = path.join(process.cwd(), 'articles');
+const POSTS_DIR = path.join(process.cwd(), 'posts');
 
 const CATEGORY_DATA: Record<string, { icon: string; description: string }> = {
   'AI': { icon: '🤖', description: '人工智能核心技术与应用' },
@@ -23,69 +24,30 @@ const CATEGORY_DATA: Record<string, { icon: string; description: string }> = {
   '工具': { icon: '🔧', description: '开发工具推荐' },
 };
 
-function parseArticleFile(filename: string, content: string): ArticleFile | null {
-  try {
-    const titleMatch = content.match(/<title>([^<]+)<\/title>/);
-    const title = titleMatch ? titleMatch[1] : filename.replace('.html', '').replace(/-/g, ' ');
-
-    const descMatch = content.match(/<meta name="description" content="([^"]+)"/);
-    const description = descMatch ? descMatch[1] : '';
-
-    const dateMatch = content.match(/<span class='date'>([^<]+)<\/span>/);
-    const date = dateMatch ? dateMatch[1] : '';
-
-    const catMatch = content.match(/<span class='cat'>([^<]+)<\/span>/);
-    const category = catMatch ? catMatch[1] : 'AI';
-
-    const contentMatch = content.match(/<div class="content">([\s\S]*?)<\/div>\s*<\/article>/);
-    let articleContent = '';
-    if (contentMatch) {
-      articleContent = contentMatch[1]
-        .trim()
-        .replace(/<p>/g, '\n\n')
-        .replace(/<\/p>/g, '')
-        .replace(/<br\s*\/?>/g, '\n')
-        .replace(/<[^>]+>/g, '')
-        .trim();
-    }
-
-    return {
-      filename,
-      title,
-      description,
-      category,
-      date,
-      content: articleContent,
-    };
-  } catch {
-    return null;
-  }
-}
-
 export function getAllArticles(): Article[] {
   const articles: Article[] = [];
 
   try {
-    const files = fs.readdirSync(ARTICLES_DIR).filter(
-      f => f.endsWith('.html') &&
-        !['index.html', 'categories.html', 'tags.html', 'style.css', 'generate.js', 'generate-backup.js', 'robots.txt', 'sitemap.xml', 'CNAME'].includes(f)
+    const files = fs.readdirSync(POSTS_DIR).filter(
+      f => f.endsWith('.md')
     );
 
     files.forEach(file => {
-      const content = fs.readFileSync(path.join(ARTICLES_DIR, file), 'utf8');
-      const parsed = parseArticleFile(file, content);
-      if (parsed) {
-        const slug = file.replace('.html', '');
-        articles.push({
-          id: slug,
-          title: parsed.title,
-          description: parsed.description || '点击查看全文...',
-          content: parsed.content,
-          category: parsed.category,
-          date: parsed.date,
-          slug,
-        });
-      }
+      const filePath = path.join(POSTS_DIR, file);
+      const content = fs.readFileSync(filePath, 'utf8');
+      const { data, content: body } = matter(content);
+
+      const slug = file.replace('.md', '');
+
+      articles.push({
+        id: slug,
+        title: data.title || slug.replace(/-/g, ' '),
+        description: data.description || '点击查看全文...',
+        content: body.trim(),
+        category: data.category || 'AI',
+        date: data.date || '',
+        slug,
+      });
     });
   } catch (error) {
     console.error('Error reading articles:', error);
@@ -95,24 +57,23 @@ export function getAllArticles(): Article[] {
 }
 
 export function getArticleBySlug(slug: string): Article | null {
-  const filename = `${slug}.html`;
-  const filepath = path.join(ARTICLES_DIR, filename);
+  const filename = `${slug}.md`;
+  const filepath = path.join(POSTS_DIR, filename);
 
   try {
     if (fs.existsSync(filepath)) {
       const content = fs.readFileSync(filepath, 'utf8');
-      const parsed = parseArticleFile(filename, content);
-      if (parsed) {
-        return {
-          id: slug,
-          title: parsed.title,
-          description: parsed.description,
-          content: parsed.content,
-          category: parsed.category,
-          date: parsed.date,
-          slug,
-        };
-      }
+      const { data, content: body } = matter(content);
+
+      return {
+        id: slug,
+        title: data.title || slug.replace(/-/g, ' '),
+        description: data.description || '',
+        content: body.trim(),
+        category: data.category || 'AI',
+        date: data.date || '',
+        slug,
+      };
     }
   } catch {
     return null;
