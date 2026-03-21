@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP 快速入门教程 - Open AI 分享站</title>
+  <meta name="description" content="">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="bg"></div>
+<header><div class="container"><a href="/" class="logo">◈ AI Insights</a><nav><a href="/">首页</a><a href="/categories.html">分类</a><a href="/tags.html">标签</a></nav></div></header>
+<main><div class="container hero"><span class="badge">🤖 AI技术前沿</span><h1>Open AI 分享站</h1><p>点击文章查看详情</p></div></main>
+<main class="article">
+<a href="/" class="back">返回首页</a>
+<span class="cat">MCP</span>
+<h1>MCP 快速入门：模型上下文协议完全指南</h1>
+<div class="meta"><span class="date">2026-03-21</span></div>
+
+<p>MCP（Model Context Protocol）是 Anthropic 推出的开放协议，旨在让 AI 模型安全地与外部工具和数据源交互。本文手把手教你从零开始构建 MCP 服务器和客户端。</p>
+
+<h2>为什么需要 MCP？</h2>
+<p>传统 AI 应用中，开发者需要为每个工具单独编写集成代码。MCP 提供了标准化的接口：</p>
+
+<pre><code># 传统方式：每个工具单独集成
+from weather_api import get_weather
+from database import query_db
+from file_system import read_file
+
+# MCP 方式：统一协议
+result = mcp_client.call_tool("weather", {"city": "北京"})
+result = mcp_client.call_tool("database", {"sql": "SELECT * FROM users"})
+result = mcp_client.call_tool("filesystem", {"path": "/data/config.json"})</code></pre>
+
+<h2>1. 安装 MCP SDK</h2>
+
+<pre><code>pip install mcp-sdk uv
+
+# 或使用 uv（更快）
+uv pip install mcp-sdk</code></pre>
+
+<h2>2. 创建 MCP 服务器</h2>
+<p>以下是一个完整的 MCP 服务器实现，提供文件读取和天气查询功能：</p>
+
+<pre><code>from mcp.server import Server
+from mcp.server.stdio import stdio_server
+from mcp.types import Tool, TextContent
+import asyncio
+import json
+
+app = Server("demo-server")
+
+# 定义可用工具
+@app.list_tools()
+async def list_tools():
+    return [
+        Tool(
+            name="read_file",
+            description="读取文件内容",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "path": {"type": "string", "description": "文件路径"},
+                    "lines": {"type": "number", "description": "读取行数"}
+                },
+                "required": ["path"]
+            }
+        ),
+        Tool(
+            name="get_weather",
+            description="查询天气",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "city": {"type": "string", "description": "城市名称"}
+                },
+                "required": ["city"]
+            }
+        )
+    ]
+
+# 处理工具调用
+@app.call_tool()
+async def call_tool(name: str, arguments: dict):
+    if name == "read_file":
+        with open(arguments["path"], "r") as f:
+            lines = arguments.get("lines", 100)
+            return [TextContent(type="text", text=f.readlines()[:lines].__str__())]
+    
+    elif name == "get_weather":
+        # 模拟天气 API
+        return [TextContent(type="text", text=f"{arguments['city']} 天气：晴，25°C")]
+    
+    raise ValueError(f"Unknown tool: {name}")
+
+if __name__ == "__main__":
+    asyncio.run(stdio_server.run(app))</code></pre>
+
+<h2>3. 创建 MCP 客户端</h2>
+
+<pre><code>from mcp.client import Client
+from mcp.client.stdio import stdio_client
+
+async def main():
+    async with stdio_client("python server.py") as (read, write):
+        client = Client(read, write)
+        
+        # 列出可用工具
+        tools = await client.list_tools()
+        print("可用工具:", [t.name for t in tools])
+        
+        # 调用工具
+        result = await client.call_tool("read_file", {"path": "config.json"})
+        print("文件内容:", result[0].text)
+        
+        # 查询天气
+        weather = await client.call_tool("get_weather", {"city": "上海"})
+        print("天气:", weather[0].text)
+
+asyncio.run(main())</code></pre>
+
+<h2>4. 运行示例</h2>
+
+<pre><code># 终端1：启动服务器
+python server.py
+
+# 终端2：运行客户端
+python client.py
+
+# 输出：
+# 可用工具: ['read_file', 'get_weather']
+# 文件内容: ['{"name": "demo", "version": "1.0"}']
+# 天气: 上海 天气：晴，25°C</code></pre>
+
+<h2>MCP vs 传统 Function Calling</h2>
+
+<table>
+<tr><th>特性</th><th>MCP</th><th>Function Calling</th></tr>
+<tr><td>标准化</td><td>开放协议</td><td>提供商特定</td></tr>
+<tr><td>状态保持</td><td>会话级</td><td>每次请求独立</td></tr>
+<tr><td>工具发现</td><td>动态列表</td><td>静态定义</td></tr>
+<tr><td>生态系统</td><td>跨平台</td><td>仅限支持厂商</td></tr>
+</table>
+
+<h2>总结</h2>
+<p>MCP 为 AI 工具交互提供了标准化方案。随着生态发展，越来越多的服务将支持 MCP 协议。掌握 MCP 开发技能，将成为 AI 工程师的必备能力。</p>
+
+</main>
+<footer><div class="container">© 2026 Open AI 分享站</div></footer>
+</body>
+</html>

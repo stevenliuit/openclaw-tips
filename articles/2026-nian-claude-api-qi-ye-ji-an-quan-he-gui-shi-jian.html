@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026年Claude API企业级安全合规实践</title>
+    <meta name="description" content="Claude API企业级安全合规指南">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<article>
+<h1>2026年Claude API企业级安全合规实践</h1>
+<p>Claude API在企业级应用中展现出卓越的安全能力。2026年，结合实际部署经验，形成了完善的安全合规实践，帮助企业安全地使用AI能力。
+
+数据安全是首要考量。所有通过API传输的数据都应该使用TLS加密，敏感信息建议在发送前进行脱敏处理。Claude API支持数据不出域的部署模式，企业可以在自己的云环境中运行模型，数据完全保留在企业内部。这种模式特别适合金融、医疗等对数据安全要求严格的行业。
+
+访问控制需要多层防护。建议采用最小权限原则，为不同应用分配独立的API密钥，定期轮换。启用API的访问日志功能，记录所有调用请求，便于审计追溯。对于高敏感操作，可以启用二次确认机制，需要人工审批后才能执行。
+
+合规审计同样重要。企业应该建立完整的AI使用政策，明确哪些场景可以使用AI，哪些场景禁止使用。Claude API提供了详细的调用记录，包括请求时间、输入内容、输出摘要等信息，满足合规检查需求。建议定期进行AI使用审计，确保业务符合内部政策和外部法规要求。</p>
+</article>
+</main>
+</body>
+</html>

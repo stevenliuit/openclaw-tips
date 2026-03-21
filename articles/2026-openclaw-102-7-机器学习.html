@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>机器学习模型压缩技术-边缘部署的实战指南</title>
+  <meta name="description" content="">
+  <link rel='stylesheet' href='/style.css'>
+</head>
+<body>
+  <div class='bg'></div>
+  <header>
+    <div class='container'>
+      <a href='/' class='logo'>◈ AI Insights</a>
+      <nav>
+        <a href='/'>首页</a>
+        <a href='/categories.html'>分类</a>
+        <a href='/tags.html'>标签</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <div class="container hero">
+      <span class="badge">🤖 AI技术前沿</span>
+      <h1>Open AI 分享站</h1>
+      <p>点击文章查看详情</p>
+    </div>
+  </main>
+  <main class='article'>
+    <a href='/' class='back'>返回首页</a>
+    <span class='cat'>机器学习</span>
+    <h1>机器学习模型压缩技术-边缘部署的实战指南</h1>
+    <div class='meta'>
+      <span class='date'>2026-03-20</span>
+    </div>
+    <p>边缘计算场景对模型的大小和推理速度有严格要求。模型压缩技术使得在资源受限的边缘设备上部署复杂AI模型成为可能。本文介绍主流的压缩技术及其实战应用。</p><p>量化是最常用的压缩技术之一。权重量化将高精度浮点数转换为低精度表示。激活量化进一步减少中间计算的资源消耗。混合精度策略在精度和压缩率间取得平衡。量化感知训练能够在训练阶段就考虑量化效应。</p><p>剪枝通过移除不重要的参数来压缩模型。结构化剪枝针对整个卷积核或注意力头，更易于硬件加速。非结构化剪枝获得更高的压缩率但需要稀疏计算支持。迭代剪枝和重训练逐步优化模型结构。</p><p>知识蒸馏将大模型的能力迁移到小模型。教师模型指导学生模型学习更有效的特征表示。中间层知识的蒸馏保留更多的结构信息。任务相关的蒸馏针对特定下游任务优化。学生模型的性能可以接近教师模型的九成以上。</p><p>部署优化需要综合考虑多个因素。推理引擎的选择直接影响执行效率。硬件特性的利用通过专门的优化实现。批处理的策略平衡吞吐量和延迟。模型的版本管理支持快速回滚和更新。</p>
+  </main>
+  <footer>
+    <div class='container'>© 2026 Open AI 分享站</div>
+  </footer>
+</body>
+</html>

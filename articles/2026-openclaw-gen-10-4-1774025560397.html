@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LangChain表达式语言与链式调用实战指南">
+    <title>LangChain表达式语言与链式调用实战指南</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>AI Insights</h1>
+        <nav><a href="index.html">首页</a> / <a href="categories.html">分类</a></nav>
+    </header>
+    <main>
+        <article>
+            <h2>LangChain表达式语言与链式调用实战指南</h2>
+            <div class="meta">
+                <span class='date'>2026-03-20</span> / <span class='cat'>LangChain</span>
+            </div>
+            <div class="content">
+                <p>LangChain的表达语言（LCEL）为构建复杂的大语言模型应用提供了强大的抽象能力。掌握LCEL是深度使用LangChain的关键，本文将通过实战案例帮助你快速上手。</p>
+<p>LCEL的核心概念是"链"（Chain）。链将多个处理步骤串联在一起，每个步骤的输出作为下一个步骤的输入。最基本的链是Prompt模板和模型调用的组合：通过Prompt模板格式化输入，然后发送给模型，最后解析输出。看似简单的模式却是构建复杂应用的基础。</p>
+<p>在实际应用中，链式调用往往需要处理多种数据类型和格式。LCEL提供了丰富的组件来处理这些情况。例如，RunnableParallel可以并行执行多个任务；RunnableMap可以将输入映射到不同的处理路径；RunnableLambda允许插入自定义的Python函数。某知识库问答系统使用了二十多个组件的链式组合，实现了从问题理解、文档检索到答案生成的完整流程。</p>
+<p>调试LCEL链是一个挑战。新版本提供了详细的执行追踪功能，可以查看每个步骤的输入输出和执行时间。开发者可以逐步检查链中每个组件的表现，定位性能瓶颈和逻辑错误。某团队利用这一功能将一个复杂链的执行时间从三点五秒优化到零点八秒，提升了超过四倍的整体性能。</p>
+            </div>
+        </article>
+    </main>
+    <footer>
+        <p>&copy; 2026 AI Insights. All rights reserved.</p>
+    </footer>
+</body>
+</html>

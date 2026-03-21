@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Agent 实战：构建智能代理系统 - Open AI 分享站</title>
+  <meta name="description" content="">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="bg"></div>
+<header><div class="container"><a href="/" class="logo">◈ AI Insights</a><nav><a href="/">首页</a><a href="/categories.html">分类</a><a href="/tags.html">标签</a></nav></div></header>
+<main><div class="container hero"><span class="badge">🤖 AI技术前沿</span><h1>Open AI 分享站</h1><p>点击文章查看详情</p></div></main>
+<main class="article">
+<a href="/" class="back">返回首页</a>
+<span class="cat">Agent</span>
+<h1>AI Agent 实战：构建具有规划、记忆和工具调用能力的智能代理</h1>
+<div class="meta"><span class="date">2026-03-21</span></div>
+
+<p>本文手把手教你构建一个完整的 AI Agent 系统，包含任务规划、短期/长期记忆管理、工具调用和自我反思等核心能力。</p>
+
+<h2>1. Agent 核心架构</h2>
+
+<pre><code>from langchain_openai import ChatOpenAI
+from langchain.agents import AgentExecutor, create_openai_functions_agent
+from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain.tools import Tool
+from langchain.memory import ConversationBufferMemory
+
+# 初始化 LLM
+llm = ChatOpenAI(model="gpt-4o", temperature=0)
+
+# 定义工具
+def search_wikipedia(query: str) -> str:
+    """搜索维基百科"""
+    # 实际项目中调用 Wikipedia API
+    return f"关于 {query} 的信息..."
+
+def calculate(expression: str) -> str:
+    """数学计算"""
+    result = eval(expression)
+    return f"计算结果: {result}"
+
+tools = [
+    Tool.from_function(
+        func=search_wikipedia,
+        name="wikipedia_search",
+        description="搜索维基百科获取信息"
+    ),
+    Tool.from_function(
+        func=calculate,
+        name="calculator",
+        description="执行数学计算"
+    )
+]</code></pre>
+
+<h2>2. 构建提示词模板</h2>
+
+<pre><code># Agent 系统提示词
+prompt = ChatPromptTemplate.from_messages([
+    ("system", """你是一个智能助手。
+    
+    可用工具：
+    - wikipedia_search: 搜索维基百科
+    - calculator: 执行数学计算
+    
+    思维方式：
+    1. 理解用户问题
+    2. 分析是否需要使用工具
+    3. 如果需要，明确调用哪个工具及参数
+    4. 根据工具返回结果生成最终回答
+    
+    记住：只在必要时调用工具，不要过度依赖。"""),
+    MessagesPlaceholder(variable_name="chat_history", optional=True),
+    ("human", "{input}"),
+    MessagesPlaceholder(variable_name="agent_scratchpad")
+])
+
+# 创建 Agent
+agent = create_openai_functions_agent(llm, tools, prompt)
+
+# 创建执行器（包含记忆和工具）
+memory = ConversationBufferMemory(
+    memory_key="chat_history",
+    return_messages=True
+)
+
+agent_executor = AgentExecutor(
+    agent=agent,
+    tools=tools,
+    memory=memory,
+    verbose=True,
+    max_iterations=10
+)</code></pre>
+
+<h2>3. 执行 Agent</h2>
+
+<pre><code># 运行 Agent
+response = agent_executor.invoke({
+    "input": "谁是阿尔伯特·爱因斯坦？他的出生年份是多少？"
+})
+
+print(response["output"])</code></pre>
+
+<h2>4. 添加长期记忆（向量存储）</h2>
+
+<pre><code>from langchain_community.vectorstores import Chroma
+from langchain_openai import OpenAIEmbeddings
+from langchain.schema import Document
+
+# 创建长期记忆存储
+memory_vectorstore = Chroma(
+    collection_name="long_term_memory",
+    embedding_function=OpenAIEmbeddings()
+)
+
+def save_to_memory(content: str, metadata: dict = None):
+    """保存信息到长期记忆"""
+    doc = Document(page_content=content, metadata=metadata or {})
+    memory_vectorstore.add_documents([doc])
+
+def recall_memory(query: str, k: int = 3) -> list:
+    """从长期记忆检索"""
+    docs = memory_vectorstore.similarity_search(query, k=k)
+    return [doc.page_content for doc in docs]
+
+# 定期保存重要信息
+save_to_memory(
+    "用户偏好：喜欢简洁的技术解释，优先提供代码示例",
+    metadata={"type": "preference"}
+)</code></pre>
+
+<h2>5. 任务规划（ReAct 模式）</h2>
+
+<pre><code>from typing import List, Tuple
+from langchain_core.agents import AgentAction, AgentFinish
+
+class TaskPlanner:
+    """任务规划器：将复杂任务分解为步骤"""
+    
+    def __init__(self, llm):
+        self.llm = llm
+    
+    def decompose(self, task: str) -> List[str]:
+        """分解任务"""
+        prompt = f"""将以下任务分解为具体步骤：
+        任务：{task}
+        
+        输出格式：每行一个步骤，用数字开头"""
+        
+        response = self.llm.invoke(prompt)
+        steps = response.content.strip().split("\n")
+        return [s.split(".", 1)[1].strip() if "." in s else s for s in steps]
+    
+    def execute_plan(self, plan: List[str], executor_fn) -> str:
+        """按计划执行"""
+        results = []
+        for i, step in enumerate(plan, 1):
+            print(f"执行步骤 {i}/{len(plan)}: {step}")
+            result = executor_fn(step)
+            results.append(f"步骤{i}: {result}")
+        return "\n".join(results)
+
+# 使用
+planner = TaskPlanner(llm)
+plan = planner.decompose("帮我查北京天气，然后发邮件告诉某人")
+print("计划步骤:", plan)</code></pre>
+
+<h2>6. 自我反思机制</h2>
+
+<pre><code>class ReflectiveAgent:
+    """具有自我反思能力的 Agent"""
+    
+    def __init__(self, llm, tools):
+        self.llm = llm
+        self.tools = tools
+    
+    def reflect(self, action: str, observation: str) -> str:
+        """反思上一步的行为和结果"""
+        prompt = f"""分析以下执行过程，评估是否成功：
+        
+        行为：{action}
+        结果：{observation}
+        
+        如果成功，说明原因。
+        如果失败，说明原因并给出改进建议。"""
+        
+        response = self.llm.invoke(prompt)
+        return response.content
+    
+    def should_continue(self, iterations: int, max_iterations: int) -> bool:
+        """判断是否继续执行"""
+        if iterations >= max_iterations:
+            print(f"达到最大迭代次数 {max_iterations}")
+            return False
+        return True
+
+# 集成到 Agent
+reflector = ReflectiveAgent(llm, tools)</code></pre>
+
+<h2>7. 完整 Agent 示例</h2>
+
+<pre><code>import json
+
+class CompleteAgent:
+    """完整的 AI Agent 系统"""
+    
+    def __init__(self, tools: list):
+        self.llm = ChatOpenAI(model="gpt-4o")
+        self.tools = tools
+        self.short_memory = []  # 短期记忆
+        self.plan = []          # 当前计划
+        self.reflector = ReflectiveAgent(self.llm, tools)
+    
+    def run(self, task: str) -> str:
+        """运行 Agent"""
+        print(f"任务: {task}")
+        
+        # 1. 任务规划
+        if not self.plan:
+            self.plan = self._plan(task)
+            print(f"计划: {self.plan}")
+        
+        # 2. 执行计划
+        results = []
+        for i, step in enumerate(self.plan):
+            result = self._execute_step(step)
+            results.append(result)
+            
+            # 3. 反思
+            reflection = self.reflector.reflect(step, result)
+            print(f"反思: {reflection}")
+            
+            if "失败" in reflection:
+                # 重新规划
+                self.plan = self._plan(task)
+        
+        # 4. 生成最终回复
+        final_response = self._generate_response(task, results)
+        
+        # 5. 保存到长期记忆
+        self._save_memory(task, final_response)
+        
+        return final_response
+    
+    def _plan(self, task: str) -> List[str]:
+        # 使用 TaskPlanner 分解任务
+        ...
+    
+    def _execute_step(self, step: str) -> str:
+        # 调用 LLM 或工具执行
+        ...
+    
+    def _generate_response(self, task: str, results: list) -> str:
+        # 整合结果生成回复
+        ...
+
+# 使用
+agent = CompleteAgent(tools)
+result = agent.run("帮我查北京天气，计算 123+456，然后总结")
+print(result)</code></pre>
+
+<h2>总结</h2>
+<p>构建 AI Agent 的核心在于：规划能力、工具调用、记忆管理和自我反思。通过模块化设计，可以构建出功能强大的智能代理系统。</p>
+
+</main>
+<footer><div class="container">© 2026 Open AI 分享站</div></footer>
+</body>
+</html>
