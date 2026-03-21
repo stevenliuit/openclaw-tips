@@ -1,65 +1,114 @@
-import Image from "next/image";
+import { getAllArticles, getCategories } from '@/lib/articles';
+import ArticleCard from '@/components/ArticleCard';
+import Pagination from '@/components/Pagination';
+import Link from 'next/link';
+import type { Metadata } from 'next';
 
-export default function Home() {
+const ITEMS_PER_PAGE = 24;
+
+export const metadata: Metadata = {
+  title: 'Open AI 分享站 - 首页',
+  description: 'AI技术前沿-专注AI、自动化、开发技巧与行业趋势',
+};
+
+interface HomePageProps {
+  searchParams: Promise<{ page?: string }>;
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const params = await searchParams;
+  const currentPage = Number(params.page) || 1;
+  const allArticles = getAllArticles();
+  const categories = getCategories();
+
+  const totalArticles = allArticles.length;
+  const totalPages = Math.ceil(totalArticles / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const articles = allArticles.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen flex flex-col">
+      <div className="flex-1">
+
+        {/* Hero */}
+        <section className="flex items-center" style={{ height: '270px' }}>
+          <div className="max-w-5xl mx-auto px-6 w-full text-center">
+            <h1
+              className="text-4xl sm:text-5xl font-bold tracking-tight mb-3 leading-tight"
+              style={{
+                background: 'linear-gradient(135deg, #dce5f0 0%, #22d3ee 55%, #818cf8 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Open AI 分享站
+            </h1>
+            <p className="text-sm text-[#7b90a8] text-center">
+              专注 AI、自动化、开发技巧与行业趋势
+            </p>
+
+            {/* Stats */}
+            <div className="flex items-center justify-center gap-8 mt-8">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-[#22d3ee]">{totalArticles}</div>
+                <div className="text-xs text-[#4c6070] mt-0.5">篇文章</div>
+              </div>
+              <div className="w-px h-10 bg-[#1b2840]" />
+              <div className="text-center">
+                <div className="text-2xl font-bold text-[#818cf8]">{categories.length}</div>
+                <div className="text-xs text-[#4c6070] mt-0.5">个分类</div>
+              </div>
+              <div className="w-px h-10 bg-[#1b2840]" />
+              <div className="text-center">
+                <div className="text-2xl font-bold text-[#34d399]">{totalPages}</div>
+                <div className="text-xs text-[#4c6070] mt-0.5">页内容</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Category Filters */}
+        <section className="max-w-5xl mx-auto px-6 mb-8">
+          <div className="flex flex-wrap justify-center gap-2">
+            <Link
+              href="/"
+              className="px-4 py-1.5 rounded-full text-xs font-semibold bg-[#22d3ee] text-[#05070c] transition-all duration-200 cursor-pointer"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              全部
+            </Link>
+            {categories.slice(0, 8).map((cat) => (
+              <Link
+                key={cat.name}
+                href={`/categories/${encodeURIComponent(cat.name)}`}
+                className="px-4 py-1.5 rounded-full text-xs font-medium text-[#7b90a8] bg-[#0d1421] border border-[#1b2840] transition-all duration-200 hover:border-[#22d3ee]/50 hover:text-[#22d3ee] cursor-pointer"
+              >
+                {cat.name}
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Articles Grid */}
+        <section className="max-w-5xl mx-auto px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-6">
+            {articles.map((article) => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
+          </div>
+        </section>
+
+        {/* Pagination */}
+        <div className="max-w-5xl mx-auto px-6">
+          <Pagination currentPage={currentPage} totalPages={totalPages} basePath="/" />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Page info */}
+        <div className="text-center pb-14 text-xs text-[#4c6070]">
+          第 {currentPage} / {totalPages} 页 · 共 {totalArticles} 篇
         </div>
-      </main>
+
+      </div>
     </div>
   );
 }
