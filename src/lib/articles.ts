@@ -2,6 +2,7 @@ import { Article, Category } from '@/types/article';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import crypto from 'crypto';
 
 const POSTS_DIR = path.join(process.cwd(), 'posts');
 
@@ -24,6 +25,26 @@ const CATEGORY_DATA: Record<string, { icon: string; description: string }> = {
   '工具': { icon: '🔧', description: '开发工具推荐' },
 };
 
+/**
+ * Creates a URL-safe ASCII-only slug from a filename using MD5 hash.
+ * This ensures that articles with Chinese characters in filenames
+ * still get unique, URL-safe slugs that work with Next.js static generation.
+ */
+function filenameToSlug(filename: string): string {
+  const name = filename.replace(/\.md$/, '');
+  return crypto.createHash('md5').update(name).digest('hex').substring(0, 8);
+}
+
+/**
+ * Maps a slug back to the original filename for file lookup.
+ */
+function findFileBySlug(slug: string): string | null {
+  const files = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith('.md'));
+  // Find file whose slug matches
+  const match = files.find(f => filenameToSlug(f) === slug);
+  return match || null;
+}
+
 export function getAllArticles(): Article[] {
   const articles: Article[] = [];
 
@@ -37,7 +58,8 @@ export function getAllArticles(): Article[] {
       const content = fs.readFileSync(filePath, 'utf8');
       const { data, content: body } = matter(content);
 
-      const slug = file.replace('.md', '');
+      // Use hash-based URL-safe slug
+      const slug = filenameToSlug(file);
 
       articles.push({
         id: slug,
@@ -57,7 +79,9 @@ export function getAllArticles(): Article[] {
 }
 
 export function getArticleBySlug(slug: string): Article | null {
-  const filename = `${slug}.md`;
+  const filename = findFileBySlug(slug);
+  if (!filename) return null;
+  
   const filepath = path.join(POSTS_DIR, filename);
 
   try {
